@@ -1,0 +1,28 @@
+- group: name=sudo state=present
+- group: name=ssh state=present
+
+- name: Add user and add it to sudo
+  user: name={{deploy_user}}
+        state=present
+        createhome=yes
+        shell=/bin/bash
+        password={{ssh_pass_to_deploy}}
+  become: true
+  become_method: "sudo"
+
+- name: "create ssh dir"
+  shell: "cd /home/{{deploy_user}} && mkdir .ssh"
+  ignore_errors: true
+
+- name: Copy a "id_rsa.pub" file from dev container to the remote machine and add it to authorized users
+  copy:
+      src: "{{ ssh_key_to_deploy }}"
+      dest: "/home/{{deploy_user}}/.ssh/authorized_keys"
+
+- name: Allow user to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '{{deploy_user}}'
+    line: '{{deploy_user}} ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'

@@ -1,0 +1,20 @@
+
+# ###########################################################################################################################################################
+# #                                                              !!!SET VARS HERE!!!                                                                      # #
+# #   Vars must be set in order for ansible deploy to work. If you are unsure about what these VARS do, search for them in the project and get familiar.  # #
+#############################################################################################################################################################
+
+# IF using ansible vault encrypted secrets, state the secrets in vault.yml
+
+# Linux Vars (mandatory)
+repo_name: "provision_new_linux_user"   #in the event your fork the repo and change the name, update repo name here
+homedir: "/home/{{ssh_user_secret}}"   # Sets home dir to your SSH user, don;t change this unless you know what you are doing.
+ssh_user: "{{ ssh_user_secret }}"   # SSH user name
+ssh_pass: "{{ ssh_pass_secret }}"   # SSH pass you use to connect 
+sudo_pass: "{{ssh_pass_secret}}"    # Define sudo pass (if same as ssh pass, you can always a variable example:  ssh_pass: {{ssh_pass}})
+ssh_port: "{{ ssh_port_secret }}"   # IF running play on server with different SSH port than default 22 or IF running second time - change port here
+ssh_cert: "{{ ssh_cert_secret }}"    # #Point to private file used to connect
+
+
+# Debug Vars
+provision_user: true
